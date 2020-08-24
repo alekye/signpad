@@ -1,4 +1,5 @@
 import React from "react";
+import Utils from "./Utils";
 import "./App.css";
 
 class App extends React.Component {
@@ -18,7 +19,12 @@ class App extends React.Component {
 
     let boundingRect = this.canvas.getBoundingClientRect();
     // console.log("bounding rect = ", boundingRect);
-    let touchInfo = e.touches[0];
+    let touchInfo = {};
+    if (Utils.isMobile()) {
+      touchInfo = e.touches[0];
+    } else {
+      touchInfo = e;
+    }
     let { clientX, clientY } = touchInfo;
     x = clientX - boundingRect.x;
     y = clientY - boundingRect.y;
@@ -28,7 +34,7 @@ class App extends React.Component {
 
   p_onMouseDown = (e) => {
     e.preventDefault();
-    console.log("mouse down e: ", e);
+    // console.log("mouse down e: ", e);
     this.isTouchDown = true;
     this.lastPoint = this.p_getPointByEvent(e);
     this.ctx.beginPath();
@@ -55,7 +61,12 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    let screenWidth = window.screen.width;
+    let screenWidth = window.screenWidth;
+    if (Utils.isMobile()) {
+      screenWidth = window.screen.width;
+    } else {
+      screenWidth = Math.min(window.innerHeight, window.innerWidth);
+    }
     let margin = 10;
     // const padSize = 600;
     let dpr = window.devicePixelRatio;
@@ -101,10 +112,10 @@ class App extends React.Component {
     ctx.lineTo(canvasWidth, 0);
 
     // 十字线
-    ctx.moveTo(canvasWidth/2, 0);
-    ctx.lineTo(canvasWidth/2, canvasWidth);
-    ctx.moveTo(0, canvasWidth/2);
-    ctx.lineTo(canvasWidth, canvasWidth/2);
+    ctx.moveTo(canvasWidth / 2, 0);
+    ctx.lineTo(canvasWidth / 2, canvasWidth);
+    ctx.moveTo(0, canvasWidth / 2);
+    ctx.lineTo(canvasWidth, canvasWidth / 2);
 
     ctx.stroke();
     ctx.restore();
@@ -115,11 +126,17 @@ class App extends React.Component {
     // this.canvas.addEventListener("mousemove", this.p_onMouseMove);
     // this.canvas.addEventListener("mouseup", this.p_onMouseUp);
     // this.canvas.addEventListener("mouseleave", this.p_onMouseLeave);
-
-    canvas.addEventListener("touchstart", this.p_onMouseDown);
-    canvas.addEventListener("touchmove", this.p_onMouseMove);
-    canvas.addEventListener("touchend", this.p_onMouseUp);
-    canvas.addEventListener("touchcancel", this.p_onMouseLeave);
+    if (Utils.isMobile()) {
+      canvas.addEventListener("touchstart", this.p_onMouseDown);
+      canvas.addEventListener("touchmove", this.p_onMouseMove);
+      canvas.addEventListener("touchend", this.p_onMouseUp);
+      canvas.addEventListener("touchcancel", this.p_onMouseLeave);
+    } else {
+      canvas.addEventListener("mousedown", this.p_onMouseDown);
+      canvas.addEventListener("mousemove", this.p_onMouseMove);
+      canvas.addEventListener("mouseup", this.p_onMouseUp);
+      canvas.addEventListener("mouseleave", this.p_onMouseLeave);
+    }
   }
 
   render() {

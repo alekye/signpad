@@ -1,8 +1,6 @@
 import React from "react";
 import "./App.css";
 
-const padSize = 600;
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -22,8 +20,8 @@ class App extends React.Component {
     // console.log("bounding rect = ", boundingRect);
     let touchInfo = e.touches[0];
     let { clientX, clientY } = touchInfo;
-    x = clientX*2 - boundingRect.x;
-    y = clientY*2 - boundingRect.y;
+    x = clientX - boundingRect.x;
+    y = clientY - boundingRect.y;
 
     return { x, y };
   };
@@ -57,14 +55,61 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    let screenWidth = window.screen.width;
+    let margin = 10;
+    // const padSize = 600;
+    let dpr = window.devicePixelRatio;
+    console.log("dpr = ", dpr);
     const canvas = this.canvasRef.current;
-    canvas.width = padSize;
-    canvas.height = padSize;
+    const boundingRect = canvas.getBoundingClientRect();
+    console.log("bounding rect = ", boundingRect);
+    const canvasWidth = screenWidth - margin * 2;
+    console.log("canvasWidth = ", canvasWidth);
+    canvas.width = canvasWidth * dpr;
+    canvas.height = canvasWidth * dpr;
+    canvas.style.marginLeft = `${margin}px`;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasWidth}px`;
+    // console.log("canvas style = ", canvas.style);
+    // canvas.style.width = `${canvasWidth}px`;
+    // canvas.state.height = `${canvasWidth}px`;
+
+    // '1px' 这样的字符串转数字
+    // let borderWidth = getComputedStyle(canvas).borderWidth;
+    // borderWidth = parseInt(borderWidth);
+    // console.log("border width = ", borderWidth, " type = ", typeof borderWidth);
+    // canvas.width = (boundingRect.width - borderWidth*2)*dpr;
+    // canvas.height = (boundingRect.height - borderWidth*2)*dpr;
+
     window.myCanvas = canvas;
     this.canvas = canvas;
     let ctx = canvas.getContext("2d");
     window.ctx = ctx;
     this.ctx = ctx;
+    // 修改坐标的比率
+    ctx.scale(dpr, dpr);
+
+    ctx.save();
+    ctx.beginPath();
+    // 设置样式
+    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = "red";
+    // 绘制对角线
+    ctx.moveTo(0, 0);
+    ctx.lineTo(canvasWidth, canvasWidth);
+    ctx.moveTo(0, canvasWidth);
+    ctx.lineTo(canvasWidth, 0);
+
+    // 十字线
+    ctx.moveTo(canvasWidth/2, 0);
+    ctx.lineTo(canvasWidth/2, canvasWidth);
+    ctx.moveTo(0, canvasWidth/2);
+    ctx.lineTo(canvasWidth, canvasWidth/2);
+
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.lineWidth = 5;
     // 绑定鼠标事件
     // this.canvas.addEventListener("mousedown", this.p_onMouseDown);
     // this.canvas.addEventListener("mousemove", this.p_onMouseMove);
@@ -75,35 +120,6 @@ class App extends React.Component {
     canvas.addEventListener("touchmove", this.p_onMouseMove);
     canvas.addEventListener("touchend", this.p_onMouseUp);
     canvas.addEventListener("touchcancel", this.p_onMouseLeave);
-
-    ctx.save();
-    // 对角线
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 0.5;
-    ctx.moveTo(0, 0);
-    ctx.lineTo(padSize, padSize);
-    ctx.moveTo(padSize, 0);
-    ctx.lineTo(0, padSize);
-    ctx.stroke();
-    ctx.beginPath();
-    // ctx.strokeStyle = "blue";
-    // ctx.lineWidth = 2;
-    // 水平线
-
-    ctx.moveTo(0, padSize / 2);
-    ctx.lineTo(padSize, padSize / 2);
-    // 垂直线
-    ctx.moveTo(padSize / 2, 0);
-    ctx.lineTo(padSize / 2, padSize);
-
-    ctx.stroke();
-    ctx.restore();
-
-    // 设置颜色和宽度
-    // ctx.strokeStyle = "blue";
-    ctx.lineWidth = 5;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
   }
 
   render() {
@@ -114,14 +130,5 @@ class App extends React.Component {
     );
   }
 }
-
-// function App() {
-//   return (
-//     <div >
-//       <div>paint pad</div>
-//       <canvas className="pad" width="300" height="300"></canvas>
-//     </div>
-//   );
-// }
 
 export default App;

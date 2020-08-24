@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-const padSize = 300;
+const padSize = 600;
 
 class App extends React.Component {
   constructor(props) {
@@ -19,10 +19,11 @@ class App extends React.Component {
     let y = 0;
 
     let boundingRect = this.canvas.getBoundingClientRect();
+    // console.log("bounding rect = ", boundingRect);
     let touchInfo = e.touches[0];
     let { clientX, clientY } = touchInfo;
-    x = clientX - boundingRect.x;
-    y = clientY - boundingRect.y;
+    x = clientX*2 - boundingRect.x;
+    y = clientY*2 - boundingRect.y;
 
     return { x, y };
   };
@@ -56,25 +57,26 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.canvas = this.canvasRef.current;
-    window.myCanvas = this.canvas;
-    console.log("canvas === ", this.canvas);
-    this.ctx = this.canvas.getContext("2d");
-    console.log("ctxx = ", this.ctx);
+    const canvas = this.canvasRef.current;
+    canvas.width = padSize;
+    canvas.height = padSize;
+    window.myCanvas = canvas;
+    this.canvas = canvas;
+    let ctx = canvas.getContext("2d");
+    window.ctx = ctx;
+    this.ctx = ctx;
     // 绑定鼠标事件
     // this.canvas.addEventListener("mousedown", this.p_onMouseDown);
     // this.canvas.addEventListener("mousemove", this.p_onMouseMove);
     // this.canvas.addEventListener("mouseup", this.p_onMouseUp);
     // this.canvas.addEventListener("mouseleave", this.p_onMouseLeave);
 
-    this.canvas.addEventListener("touchstart", this.p_onMouseDown);
-    this.canvas.addEventListener("touchmove", this.p_onMouseMove);
-    this.canvas.addEventListener("touchend", this.p_onMouseUp);
-    this.canvas.addEventListener("touchcancel", this.p_onMouseLeave);
+    canvas.addEventListener("touchstart", this.p_onMouseDown);
+    canvas.addEventListener("touchmove", this.p_onMouseMove);
+    canvas.addEventListener("touchend", this.p_onMouseUp);
+    canvas.addEventListener("touchcancel", this.p_onMouseLeave);
 
-    let ctx = this.ctx;
     ctx.save();
-
     // 对角线
     ctx.strokeStyle = "red";
     ctx.lineWidth = 0.5;
@@ -102,15 +104,12 @@ class App extends React.Component {
     ctx.lineWidth = 5;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-
   }
 
   render() {
     return (
       <div>
-        <div className="pad">
-          <canvas ref={this.canvasRef} width="300" height="300"></canvas>
-        </div>
+        <canvas ref={this.canvasRef} className="pad"></canvas>
       </div>
     );
   }

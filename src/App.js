@@ -1,6 +1,8 @@
 import React from "react";
 import "./App.css";
 
+const padSize = 300;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -22,10 +24,11 @@ class App extends React.Component {
     x = clientX - boundingRect.x;
     y = clientY - boundingRect.y;
 
-    return {x, y};
-  }
+    return { x, y };
+  };
 
   p_onMouseDown = (e) => {
+    e.preventDefault();
     console.log("mouse down e: ", e);
     this.isTouchDown = true;
     this.lastPoint = this.p_getPointByEvent(e);
@@ -33,6 +36,7 @@ class App extends React.Component {
     this.ctx.moveTo(this.lastPoint.x, this.lastPoint.y);
   };
   p_onMouseMove = (e) => {
+    e.preventDefault();
     if (this.isTouchDown) {
       let p = this.p_getPointByEvent(e);
       this.ctx.lineTo(p.x, p.y);
@@ -41,10 +45,12 @@ class App extends React.Component {
     }
   };
   p_onMouseUp = (e) => {
+    e.preventDefault();
     console.log("mouse up");
     this.isTouchDown = false;
   };
   p_onMouseLeave = (e) => {
+    e.preventDefault();
     console.log("mouse leave");
     this.isTouchDown = false;
   };
@@ -54,7 +60,7 @@ class App extends React.Component {
     window.myCanvas = this.canvas;
     console.log("canvas === ", this.canvas);
     this.ctx = this.canvas.getContext("2d");
-    console.log("ctx = ", this.ctx);
+    console.log("ctxx = ", this.ctx);
     // 绑定鼠标事件
     // this.canvas.addEventListener("mousedown", this.p_onMouseDown);
     // this.canvas.addEventListener("mousemove", this.p_onMouseMove);
@@ -68,23 +74,25 @@ class App extends React.Component {
 
     let ctx = this.ctx;
     ctx.save();
+
     // 对角线
     ctx.strokeStyle = "red";
     ctx.lineWidth = 0.5;
     ctx.moveTo(0, 0);
-    ctx.lineTo(300, 300);
-    ctx.moveTo(300, 0);
-    ctx.lineTo(0, 300);
+    ctx.lineTo(padSize, padSize);
+    ctx.moveTo(padSize, 0);
+    ctx.lineTo(0, padSize);
     ctx.stroke();
     ctx.beginPath();
     // ctx.strokeStyle = "blue";
     // ctx.lineWidth = 2;
     // 水平线
-    ctx.moveTo(0, 150);
-    ctx.lineTo(300, 150);
+
+    ctx.moveTo(0, padSize / 2);
+    ctx.lineTo(padSize, padSize / 2);
     // 垂直线
-    ctx.moveTo(150, 0);
-    ctx.lineTo(150, 300);
+    ctx.moveTo(padSize / 2, 0);
+    ctx.lineTo(padSize / 2, padSize);
 
     ctx.stroke();
     ctx.restore();
@@ -93,7 +101,8 @@ class App extends React.Component {
     // ctx.strokeStyle = "blue";
     ctx.lineWidth = 5;
     ctx.lineCap = "round";
-    ctx.lineJoin = "round"
+    ctx.lineJoin = "round";
+
   }
 
   render() {

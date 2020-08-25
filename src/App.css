@@ -2,3 +2,24 @@
   border: 1px solid red;
   overflow: hidden;
 }
+
+.wrapper {
+  background-color: lightgray;
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.canvas1 {
+  background-color: red;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+}
+
+.canvas2 {
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  width: 100px;
+  height: 100px;
+  position: absolute;
+}

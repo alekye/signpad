@@ -145,6 +145,10 @@ class App extends React.Component {
     return (
       <div>
         <canvas ref={this.canvasRef} className="pad"></canvas>
+        <div className="wrapper">
+          <div className="canvas1">canvas 11</div>
+          <div className="canvas2">canvas 22</div>
+        </div>
       </div>
     );
   }

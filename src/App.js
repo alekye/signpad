@@ -121,6 +121,8 @@ class App extends React.Component {
     ctx.restore();
 
     ctx.lineWidth = 5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     // 绑定鼠标事件
     // this.canvas.addEventListener("mousedown", this.p_onMouseDown);
     // this.canvas.addEventListener("mousemove", this.p_onMouseMove);
